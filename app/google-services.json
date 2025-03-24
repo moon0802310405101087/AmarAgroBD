@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "193210445882",
+    "project_id": "farming-902c6",
+    "storage_bucket": "farming-902c6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193210445882:android:62cc19393e0354872c0503",
+        "android_client_info": {
+          "package_name": "com.moon.farmingbd"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyApcRqGjiJbqJ4hqaeXsMT9icdLJHN7dIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

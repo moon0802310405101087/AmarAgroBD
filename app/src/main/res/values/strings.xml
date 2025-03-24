@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">FarmingBD</string>
+    <!-- Base application theme -->
+    <style name="Theme.Material3.DayNight.NoActionBar" parent="Theme.Material3.DayNight">
+        <!-- Customize your theme here -->
+        <item name="android:windowNoTitle">true</item> <!-- No ActionBar -->
+        <item name="android:windowActionBar">false</item> <!-- Disable ActionBar -->
+        <item name="android:windowFullscreen">true</item> <!-- Fullscreen Mode -->
+    </style>
+
+    <string-array name="roles_array">
+        <item>Owner</item>
+        <item>Customer</item>
+        <item>DeliveryMan</item>
+    </string-array>
+</resources>

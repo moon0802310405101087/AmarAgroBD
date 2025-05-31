@@ -41,7 +41,7 @@ public class SignInActivity extends AppCompatActivity {
                 return;
             }
 
-            // Sign-in logic
+
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -61,7 +61,7 @@ public class SignInActivity extends AppCompatActivity {
                         DocumentSnapshot document = task.getResult();
                         String role = document.getString("role");
 
-                        // Debugging: Show role in Toast and Logcat
+
                         Toast.makeText(SignInActivity.this, "User Role: " + role, Toast.LENGTH_LONG).show();
                         Log.d("ROLE_DEBUG", "Fetched Role: " + role);
 

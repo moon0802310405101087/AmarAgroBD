@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="colorPrimary">#3F51B5</color> <!-- Indigo 500 -->
+    <color name="colorPrimaryDark">#303F9F</color> <!-- Indigo 700 -->
+    <color name="colorAccent">#FF4081</color> <!-- Pink A200 -->
+    <color name="primary_navy">#00203F</color>
+    <color name="mint_green">#ADEFD1</color>
 </resources>

@@ -1,80 +1,111 @@
 package com.moon.farmingbd;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class ViewOrdersActivity extends AppCompatActivity {
 
     private ListView ordersListView;
-    private ArrayList<Order> ordersList; // Holds the order data
-    private ArrayAdapter<Order> adapter;
+    private ArrayList<Order> ordersList;
+    private OrderAdapter adapter;
 
-    // Firebase reference
-    private FirebaseDatabase database;
     private DatabaseReference ordersRef;
+    private String currentOwnerId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_orders); // Set the layout
+        setContentView(R.layout.activity_view_orders);
 
-        ordersListView = findViewById(R.id.ordersListView); // Initialize ListView
-        ordersList = new ArrayList<>(); // Initialize ArrayList
+        ordersListView = findViewById(R.id.ordersListView);
+        ordersList = new ArrayList<>();
 
-        // Set up Firebase database reference
-        database = FirebaseDatabase.getInstance();
-        ordersRef = database.getReference("orders"); // Adjust based on your Firebase structure
+        ordersRef = FirebaseDatabase.getInstance().getReference("orders");
+        currentOwnerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        // Set up ArrayAdapter to bind data to ListView
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, ordersList);
-        ordersListView.setAdapter(adapter); // Attach adapter to ListView
+        adapter = new OrderAdapter(this, ordersList, "owner");
+        ordersListView.setAdapter(adapter);
 
-        // Fetch orders from Firebase
         fetchOrdersFromFirebase();
 
-        // Handle item click events
-        ordersListView.setOnItemClickListener((parent, view, position, id) -> {
-            Order selectedOrder = ordersList.get(position);
-            // Handle the click event, for example, show order details
-            Toast.makeText(ViewOrdersActivity.this, "Clicked: " + selectedOrder.toString(), Toast.LENGTH_SHORT).show();
-        });
+        setupBottomNavigation();
     }
 
     private void fetchOrdersFromFirebase() {
         ordersRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                ordersList.clear(); // Clear existing data
-
-                // Loop through the Firebase snapshot to fetch order data
-                for (DataSnapshot orderSnapshot : dataSnapshot.getChildren()) {
-                    Order order = orderSnapshot.getValue(Order.class); // Get the order details
-                    if (order != null) {
-                        ordersList.add(order); // Add order to list
+            public void onDataChange(DataSnapshot snapshot) {
+                ordersList.clear();
+                for (DataSnapshot orderSnap : snapshot.getChildren()) {
+                    Order order = orderSnap.getValue(Order.class);
+                    if (order != null && currentOwnerId.equals(order.getOwnerId())) {
+                        order.setId(orderSnap.getKey()); // Add Firebase push ID
+                        ordersList.add(order);
                     }
                 }
 
-                // Notify the adapter to update the ListView
+
+                Collections.sort(ordersList, new Comparator<Order>() {
+                    @Override
+                    public int compare(Order o1, Order o2) {
+                        return Long.compare(o2.getTimestamp(), o1.getTimestamp());
+                    }
+                });
+
+                if (ordersList.isEmpty()) {
+                    Toast.makeText(ViewOrdersActivity.this, "No orders found.", Toast.LENGTH_SHORT).show();
+                }
+
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Handle database error
+            public void onCancelled(DatabaseError error) {
                 Toast.makeText(ViewOrdersActivity.this, "Failed to load orders.", Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_orders);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_dashboard) {
+                startActivity(new Intent(this, DashboardActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_show_products) {
+                startActivity(new Intent(this, ShowProductsActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_orders) {
+
+                return true;
+            } else if (itemId == R.id.nav_reports) {
+                startActivity(new Intent(this, SalesReportsActivity.class));
+                finish();
+                return true;
+            } else if (itemId == R.id.nav_logout) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(this, MainActivity.class));
+                finish();
+                return true;
+            }
+            return false;
         });
     }
 }

@@ -1,16 +1,50 @@
 <resources>
+
+    <!-- App Name (Only once) -->
     <string name="app_name">FarmingBD</string>
+
     <!-- Base application theme -->
-    <style name="Theme.Material3.DayNight.NoActionBar" parent="Theme.Material3.DayNight">
+    <style name="Theme.Material3.DayNight" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your theme here -->
         <item name="android:windowNoTitle">true</item> <!-- No ActionBar -->
         <item name="android:windowActionBar">false</item> <!-- Disable ActionBar -->
         <item name="android:windowFullscreen">true</item> <!-- Fullscreen Mode -->
     </style>
 
+    <!-- Roles Array -->
     <string-array name="roles_array">
         <item>Owner</item>
         <item>Customer</item>
         <item>DeliveryMan</item>
     </string-array>
+    <array name="category_types">
+        <item>Fruits</item>
+        <item>Vegetables</item>
+        <item>Seeds</item>
+        <item>Fishes</item>
+        <item>Animals</item>
+        <item>Dairy_Products</item>
+        <item>Poultry</item>
+        <item>Other</item>
+    </array>
+    <array name="location_types">
+        <item>Dhaka</item>
+        <item>Chittagong</item>
+        <item>Khulna</item>
+        <item>Rajshahi</item>
+        <item>Barisal</item>
+        <item>Rangpur</item>
+        <item>Sylhet</item>
+        <item>Mymensingh</item>
+    </array>
+    <!-- Unit Types Array -->
+    <string-array name="unit_types">
+        <item>kg</item>
+        <item>piece</item>
+    </string-array>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="about_icon_desc">About</string>
+
+
 </resources>

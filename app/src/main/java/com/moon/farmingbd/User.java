@@ -1,16 +1,24 @@
 package com.moon.farmingbd;
 
 public class User {
+    private String name;
     private String email;
     private String role;
 
-    // Constructor
-    public User(String email, String role) {
+
+    public User() {}
+
+    public User(String name, String email, String role) {
+        this.name = name;
         this.email = email;
         this.role = role;
     }
 
-    // Getters and setters (if needed)
+
+    public String getName() {
+        return name;
+    }
+
     public String getEmail() {
         return email;
     }

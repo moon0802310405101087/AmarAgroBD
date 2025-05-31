@@ -1,117 +1,182 @@
 package com.moon.farmingbd;
 
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
+import android.util.Base64;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 public class AddProductActivity extends AppCompatActivity {
 
-    private EditText productNameInput, productPriceInput;
-    private Button saveProductButton;
+    private static final int PICK_IMAGE_REQUEST = 1;
 
-    // Firebase instances
+    private EditText productNameInput, productPriceInput, productQuantityInput, productDescriptionInput;
+    private Spinner priceUnitSpinner, quantityUnitSpinner, categorySpinner, locationSpinner;
+    private Button saveProductButton, chooseImageButton;
+    private ImageView productImageView;
+
     private FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference productsRef;
+    private Uri productImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
 
-        // Initialize the views
         productNameInput = findViewById(R.id.productNameInput);
         productPriceInput = findViewById(R.id.productPriceInput);
+        productQuantityInput = findViewById(R.id.productQuantityInput);
+        productDescriptionInput = findViewById(R.id.productDescriptionInput);
+        priceUnitSpinner = findViewById(R.id.priceUnitSpinner);
+        quantityUnitSpinner = findViewById(R.id.quantityUnitSpinner);
+        categorySpinner = findViewById(R.id.categorySpinner);
+        locationSpinner = findViewById(R.id.locationSpinner);
         saveProductButton = findViewById(R.id.saveProductButton);
+        chooseImageButton = findViewById(R.id.chooseImageButton);
+        productImageView = findViewById(R.id.productImageView);
 
-        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
-        // Set up Firebase Database reference
         database = FirebaseDatabase.getInstance();
         productsRef = database.getReference("products");
 
-        // Set onClickListener for the Save Product button
-        saveProductButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveProduct();
+        chooseImageButton.setOnClickListener(v -> openFileChooser());
+
+        saveProductButton.setOnClickListener(v -> saveProduct());
+    }
+
+    private void openFileChooser() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            productImageUri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), productImageUri);
+                productImageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
+        }
     }
 
     private void saveProduct() {
-        // Get the product name and price entered by the user
         String productName = productNameInput.getText().toString().trim();
-        String productPrice = productPriceInput.getText().toString().trim();
+        String productPriceStr = productPriceInput.getText().toString().trim();
+        String productQuantityStr = productQuantityInput.getText().toString().trim();
+        String productDescription = productDescriptionInput.getText().toString().trim();
+        String priceUnit = priceUnitSpinner.getSelectedItem().toString();
+        String quantityUnit = quantityUnitSpinner.getSelectedItem().toString();
+        String category = categorySpinner.getSelectedItem().toString();
+        String location = locationSpinner.getSelectedItem().toString();
 
-        // Check if the inputs are valid
-        if (TextUtils.isEmpty(productName)) {
-            Toast.makeText(AddProductActivity.this, "Please enter a product name", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(productName) || TextUtils.isEmpty(productPriceStr) || TextUtils.isEmpty(productQuantityStr) || TextUtils.isEmpty(productDescription)) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
         }
-        if (TextUtils.isEmpty(productPrice)) {
-            Toast.makeText(AddProductActivity.this, "Please enter a product price", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
-        // Convert price to a double
-        double price;
+        double price, quantity;
         try {
-            price = Double.parseDouble(productPrice);
+            price = Double.parseDouble(productPriceStr);
+            quantity = Double.parseDouble(productQuantityStr);
+            if (price <= 0 || quantity <= 0) {
+                Toast.makeText(this, "Price and quantity must be positive", Toast.LENGTH_SHORT).show();
+                return;
+            }
         } catch (NumberFormatException e) {
-            Toast.makeText(AddProductActivity.this, "Invalid price format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid number format", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Get the current user UID from Firebase Authentication
+        String imageBase64 = null;
+        if (productImageUri != null) {
+            imageBase64 = convertImageToBase64(productImageUri);
+        }
+
         String userId = mAuth.getCurrentUser().getUid();
-
-        // Create a new Product object
-        Product newProduct = new Product(productName, price);
-
-        // Generate a new product ID using push() and save under the specific user's ID
         String productId = productsRef.child(userId).push().getKey();
 
         if (productId != null) {
-            Log.d("Firebase", "Saving product for user ID: " + userId + " with product ID: " + productId);
-            // Save the product to Firebase under the user-specific path
-            productsRef.child(userId).child(productId).setValue(newProduct).addOnCompleteListener(task -> {
+            Product product = new Product(productName, price, quantity, productDescription, priceUnit, quantityUnit, category, location, imageBase64);
+            productsRef.child(userId).child(productId).setValue(product).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Log.d("Firebase", "Product saved successfully!");
-                    Toast.makeText(AddProductActivity.this, "Product saved successfully!", Toast.LENGTH_SHORT).show();
-                    // Clear inputs after saving
-                    productNameInput.setText("");
-                    productPriceInput.setText("");
+                    Toast.makeText(this, "Product saved successfully!", Toast.LENGTH_SHORT).show();
+                    clearInputs();
                 } else {
-                    Log.e("Firebase", "Failed to save product", task.getException());
-                    Toast.makeText(AddProductActivity.this, "Failed to save product", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to save product", Toast.LENGTH_SHORT).show();
                 }
             });
-        } else {
-            Log.e("Firebase", "Failed to generate product ID");
         }
     }
 
-    // Product model class to store product data
+    private String convertImageToBase64(Uri imageUri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos);
+            byte[] imageBytes = baos.toByteArray();
+            return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void clearInputs() {
+        productNameInput.setText("");
+        productPriceInput.setText("");
+        productQuantityInput.setText("");
+        productDescriptionInput.setText("");
+        productImageView.setImageResource(R.drawable.ic_placeholder);
+    }
+
     public static class Product {
         public String name;
         public double price;
+        public double quantity;
+        public String description;
+        public String priceUnit;
+        public String quantityUnit;
+        public String category;
+        public String location;
+        public String imageBase64;
 
-        // Constructor for Product class
-        public Product(String name, double price) {
+        public Product() {}
+
+        public Product(String name, double price, double quantity, String description, String priceUnit, String quantityUnit, String category, String location, String imageBase64) {
             this.name = name;
             this.price = price;
+            this.quantity = quantity;
+            this.description = description;
+            this.priceUnit = priceUnit;
+            this.quantityUnit = quantityUnit;
+            this.category = category;
+            this.location = location;
+            this.imageBase64 = imageBase64;
         }
     }
 }

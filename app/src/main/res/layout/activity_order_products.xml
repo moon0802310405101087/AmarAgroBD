@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    android:gravity="center">
+    android:gravity="center_horizontal"
+    android:background="#FAFAFA">
 
     <!-- Title Text for Order Products -->
     <TextView
@@ -12,14 +13,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Order Products"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
+        android:textColor="#212121"
         android:gravity="center"
-        android:layout_marginBottom="20dp" />
+        android:layout_marginBottom="16dp" />
 
     <!-- ListView to display products -->
     <ListView
         android:id="@+id/productListView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:background="@android:color/white" />
 </LinearLayout>

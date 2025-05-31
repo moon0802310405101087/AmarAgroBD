@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottom_navigation">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:background="@android:color/white"
+            android:clipToPadding="false">
+
+            <!-- Filter Bar -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:background="#F1F1F1"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="4dp"
+                android:elevation="2dp"
+                android:clipToPadding="false"
+                android:backgroundTint="@color/mint_green">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filter:"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#333333"
+                    android:layout_marginEnd="12dp" />
+
+                <Spinner
+                    android:id="@+id/filterSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/mint_green" />
+            </LinearLayout>
+
+            <!-- Earnings and Deliveries Summary -->
+            <TextView
+                android:id="@+id/summaryTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Total Earnings: ৳0 | Deliveries: 0"
+                android:textStyle="bold"
+                android:textColor="#00796B"
+                android:textSize="17sp"
+                android:padding="12dp"
+                android:background="#E0F2F1"
+                android:layout_marginBottom="16dp"
+                android:backgroundTintMode="src_in"
+                android:elevation="2dp" />
+
+            <!-- Recently Delivered Orders -->
+            <TextView
+                android:text="Recently Delivered Orders"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/deliveredOrdersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp" />
+
+            <!-- Show All Button -->
+            <Button
+                android:id="@+id/showAllButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show All"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:textAllCaps="false"
+                android:backgroundTint="@color/mint_green"
+                android:textColor="@color/primary_navy" />
+
+            <!-- Available Products -->
+            <TextView
+                android:text="Available Products"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/availableProductsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipToPadding="false"
+                android:paddingBottom="8dp" />
+
+            <TextView
+                android:id="@+id/noProductsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No product found"
+                android:visibility="gone"
+                android:textColor="#888888"
+                android:textStyle="italic"
+                android:textSize="14sp"
+                android:layout_gravity="center_horizontal"
+                android:paddingTop="12dp" />
+        </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_alignParentBottom="true"
+        android:background="#D7A9A9"
+        app:menu="@menu/bottom_nav_others"
+        app:itemIconTint="@color/primary_navy"
+        app:itemTextColor="@color/primary_navy"
+        app:labelVisibilityMode="labeled"
+        android:elevation="6dp" />
+
+</RelativeLayout>

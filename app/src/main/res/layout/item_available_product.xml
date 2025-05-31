@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_margin="6dp"
+    android:background="@drawable/rounded_image_bg"
+    android:elevation="4dp"
+    android:gravity="center_horizontal"
+    android:clipToPadding="false">
+
+    <TextView
+        android:id="@+id/productNameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Product Name"
+        android:textColor="#121212"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:layout_marginBottom="6dp" />
+
+    <TextView
+        android:id="@+id/productPriceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="৳ 200"
+        android:textColor="#E53555"
+        android:textSize="14sp"
+        android:textStyle="italic" />
+
+</LinearLayout>

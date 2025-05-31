@@ -213,4 +213,5 @@ public class CustomerDashboardActivity extends AppCompatActivity {
             startActivity(new Intent(CustomerDashboardActivity.this, ProfileActivity.class));
         });
     }
+
 }

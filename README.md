@@ -10,3 +10,4 @@ The system also supports important non-functional requirements such as:
 •	Speed: Processes order creation and updates quickly, improving overall experience.
 This system was developed using the Agile model, which helped us build it step by step. We gathered user feedback, created simple user stories, and used tools like Figma to design the interface. We also created diagrams like DFD, ERD, and followed the MVC (Model-View-Controller) pattern to keep the code organized and easy to manage.
 Overall, AmarAgroBD is a helpful and reliable tool for farmers to manage their business digitally. It improves order management, supports timely delivery, and ensures accurate sales records. With future updates and maintenance, this system can continue to support agriculture businesses across the country.
+![Image](https://github.com/user-attachments/assets/7bb9cc8f-6980-4243-aae0-d1c5835df612)

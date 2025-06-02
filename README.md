@@ -38,35 +38,54 @@ Batch: 16th | Section: B
 
 
 📱 Tech Stack
+
 Language: Java
+
 IDE: Android Studio
+
 Database & Auth: Firebase Realtime Database + Firebase Authentication
+
 UI/UX: XML (Layouts), Figma for design
+
 Architecture: MVC (Model-View-Controller)
+
 Version Control: Git & GitHub
 
 
 
 📌 Project Overview
+
 AmarAgroBD is a role-based Android application that simplifies inventory, order, and delivery management for farm-based businesses. It connects farm owners, customers, and delivery personnel under one platform for a seamless agricultural supply chain experience.
+
 🔐 User Roles & Features
 
 
 🧑‍🌾 Owner
+
 Add, edit, and delete products with image and details.
+
 Monitor stock levels and view real-time sales reports.
+
 Assign customer orders to delivery personnel by email.
+
 Track deliveries and update stock after confirmation.
 
 
+
 👥 Customer
+
 View all products listed by multiple owners.
+
 Place orders by entering division, district, city, address, phone, and quantity.
+
 Check order and delivery status from dashboard.
 
 
 🚚 Delivery Man
+
 View assigned deliveries.
+
+
 Confirm delivery status to notify owners and update records.
 
 
@@ -80,13 +99,21 @@ Confirm delivery status to notify owners and update records.
 
 
 💡 Core Functionalities
+
 📦 Product Management
+
 Add, edit, and delete products with image (stored as Base64 in Firebase).
+
 📋 Order Placement & Tracking
+
 Collects address, phone number, and quantity at checkout. Avoids duplicate customer entries.
+
 🚚 Delivery Assignment & Confirmation
+
 Owners can assign orders using deliveryman’s email. Delivery personnel can mark orders as delivered.
+
 📊 Dashboard & Reporting
+
 Each user sees a custom dashboard with stats, orders, and reports based on their role.
 
 
@@ -100,6 +127,7 @@ Each user sees a custom dashboard with stats, orders, and reports based on their
 
 
 📈 Conclusion
+
 AmarAgroBD is a digital initiative to bring efficiency, transparency, and modernization to the agricultural domain. Built using Java, Firebase, and Android Studio, it offers a scalable and secure platform to empower farmers and streamline agri-business.
 
 

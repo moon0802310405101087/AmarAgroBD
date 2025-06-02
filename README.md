@@ -1,4 +1,4 @@
-🌾 Farm Inventory Management System — AmarAgroBD
+🌾Farm Inventory Management System — AmarAgroBD
 
 
 
